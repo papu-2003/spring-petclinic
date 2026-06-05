@@ -1,0 +1,25 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- checkout: self
+
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+
+- script: |
+    chmod +x mvnw
+    ./mvnw clean package
+  displayName: 'Build Spring PetClinic'
+
+- task: CavissonCodeAnalyzer@1
+  inputs:
+    cavissonAnalyzerServiceConnection: 'cav1'
+    project: 'spring-petclinic'
